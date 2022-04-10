@@ -1,11 +1,9 @@
 # Orchid Competition
 
-## details
-Please refer to https://github.com/angelowen/2022_Orchid
+# Details
+* Please refer to https://github.com/angelowen/2022_Orchid
 
 
-![](https://i.imgur.com/dAHYukH.png)
-![](https://i.imgur.com/FRXfDy1.png)
 ## Data Preparation
 ```
 1. unzip training.zip in dataset folder
@@ -21,3 +19,10 @@ Please refer to https://github.com/angelowen/2022_Orchid
     -|label.csv
     
 ```
+
+
+
+![](https://i.imgur.com/dAHYukH.png)
+![](https://i.imgur.com/FRXfDy1.png)
+
+

@@ -48,7 +48,7 @@ pip3 install -r requirements.txt
 To train TransFG on CUB-200-2011 dataset with 4 gpus in FP-16 mode for 10000 steps run:
 
 ```bash
-CUDA_VISIBLE_DEVICES=0,1,2,3 python3 -m torch.distributed.launch --nproc_per_node=4 train.py --dataset CUB_200_2011 --split overlap --num_steps 10000 --fp16 --name sample_run
+CUDA_VISIBLE_DEVICES=0 python3 -m torch.distributed.launch --nproc_per_node=1 train.py  --split overlap --num_steps 10000 --fp16 --name sample_smooth0.07 --smoothing_value 0.07
 ```
 
 ## Citation
