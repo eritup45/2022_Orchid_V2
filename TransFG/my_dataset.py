@@ -29,14 +29,26 @@ from torch.utils.data import DataLoader, RandomSampler, DistributedSampler, Sequ
 
 def my_get_loader(args):
     train_transform=transforms.Compose([
-                                transforms.Resize((600, 600), Image.BILINEAR),
-                                transforms.RandomCrop((448, 448)),
+                                # transforms.Resize((600, 600), Image.BILINEAR),
+                                # transforms.RandomCrop((448, 448)),
+                                
+                                transforms.Resize((400, 400), Image.BILINEAR),
+                                transforms.RandomCrop((224, 224)),
+                                
                                 # transforms.CenterCrop((448, 448)),
-                                transforms.RandomCrop((448, 448)),
+                                transforms.RandomHorizontalFlip(),
+                                # transforms.RandomAdjustSharpness(sharpness_factor=1.5, p=0.05),
+                                # transforms.RandomApply([transforms.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 5))], p=0.1),
+                                transforms.RandomApply([transforms.RandomAffine(degrees=15)], p=0.1),
                                 transforms.ToTensor(),
                                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
-    test_transform=transforms.Compose([transforms.Resize((600, 600), Image.BILINEAR),
-                                transforms.CenterCrop((448, 448)),
+    test_transform=transforms.Compose([
+                                # transforms.Resize((600, 600), Image.BILINEAR),
+                                # transforms.CenterCrop((448, 448)),
+
+                                transforms.Resize((400, 400), Image.BILINEAR),
+                                transforms.CenterCrop((224, 224)),
+
                                 transforms.ToTensor(),
                                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
 

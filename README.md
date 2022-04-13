@@ -1,8 +1,8 @@
 # Orchid Competition
 
-# Details
-* Please refer to https://github.com/angelowen/2022_Orchid
-
+# Link to Other Method
+* 1. https://github.com/angelowen/2022_Orchid
+* 2. https://github.com/angelowen/Orchid-Fine-grained-Visual-Classification
 
 ## Data Preparation
 ```
@@ -19,8 +19,6 @@
     -|label.csv
     
 ```
-
-
 
 ![](https://i.imgur.com/dAHYukH.png)
 ![](https://i.imgur.com/FRXfDy1.png)

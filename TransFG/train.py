@@ -24,6 +24,7 @@ from utils.data_utils import get_loader
 from utils.dist_util import get_world_size
 
 from my_dataset import my_get_loader
+from sam import SAM
 
 logger = logging.getLogger(__name__)
 
@@ -180,11 +181,18 @@ def train(args, model):
     # Prepare dataset
     train_loader, test_loader = my_get_loader(args)
 
-    # Prepare optimizer and scheduler
-    optimizer = torch.optim.SGD(model.parameters(),
-                                lr=args.learning_rate,
-                                momentum=0.9,
-                                weight_decay=args.weight_decay)
+    if args.optimizer == "SGD":
+        # Prepare optimizer and scheduler
+        optimizer = torch.optim.SGD(model.parameters(),
+                                    lr=args.learning_rate,
+                                    momentum=0.9,
+                                    weight_decay=args.weight_decay)
+
+    if args.optimizer == "SAM":
+        # SAM + SGD optimizer
+        base_optimizer = torch.optim.SGD
+        optimizer = SAM(model.parameters(), base_optimizer, lr=args.learning_rate, momentum=0.9, weight_decay=args.weight_decay)
+
     t_total = args.num_steps
     if args.decay_type == "cosine":
         scheduler = WarmupCosineSchedule(optimizer, warmup_steps=args.warmup_steps, t_total=t_total)
@@ -211,7 +219,7 @@ def train(args, model):
     logger.info("  Gradient Accumulation steps = %d", args.gradient_accumulation_steps)
 
     model.zero_grad()
-    set_seed(args)  # Added here for reproducibility (even between python 2 and 3)
+    # set_seed(args)  # Added here for reproducibility (even between python 2 and 3)
     losses = AverageMeter()
     global_step, best_acc = 0, 0
     start_time = time.time()
@@ -362,6 +370,9 @@ def main():
     parser.add_argument('--slide_step', type=int, default=12,
                         help="Slide step for overlap split")
 
+    parser.add_argument("--optimizer", type=str, default="SGD",
+                        help="SGD, SAM")
+
     args = parser.parse_args()
 
     # if args.fp16 and args.smoothing_value != 0:
@@ -388,7 +399,7 @@ def main():
                    (args.local_rank, args.device, args.n_gpu, bool(args.local_rank != -1), args.fp16))
 
     # Set seed
-    set_seed(args)
+    # set_seed(args)
 
     # Model & Tokenizer Setup
     args, model = setup(args)
