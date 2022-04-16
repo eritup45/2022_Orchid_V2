@@ -32,8 +32,8 @@ def my_get_loader(args):
                                 # transforms.Resize((600, 600), Image.BILINEAR),
                                 # transforms.RandomCrop((448, 448)),
                                 
-                                transforms.Resize((400, 400), Image.BILINEAR),
-                                transforms.RandomCrop((224, 224)),
+                                transforms.Resize((500, 500), Image.BILINEAR),
+                                transforms.RandomCrop((350, 350)),
                                 
                                 # transforms.CenterCrop((448, 448)),
                                 transforms.RandomHorizontalFlip(),
@@ -46,8 +46,8 @@ def my_get_loader(args):
                                 # transforms.Resize((600, 600), Image.BILINEAR),
                                 # transforms.CenterCrop((448, 448)),
 
-                                transforms.Resize((400, 400), Image.BILINEAR),
-                                transforms.CenterCrop((224, 224)),
+                                transforms.Resize((500, 500), Image.BILINEAR),
+                                transforms.CenterCrop((350, 350)),
 
                                 transforms.ToTensor(),
                                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])

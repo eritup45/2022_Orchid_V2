@@ -6,7 +6,8 @@
 ## Experiments Results
 
 1. (Acc: 0.92    ) Vit-B_16, smooth=0
-2. (Acc: ) Vit-B_16, smooth=0.125 #################################################
+2. (Acc: 0.926941) Vit-B_16, smooth=0.15 
+2. (Acc: 0.936073) Vit-B_16, smooth=0.125 
 2. (Acc: 0.92    ) Vit-B_16, smooth=0.1
 3. **(Acc: 0.938356) Vit-B_16, smooth=0.07**
 4. (Acc: 0.926941) Vit-B_16, smooth=0.05
@@ -27,10 +28,13 @@
 13. (Acc: 0.920091) Vit-B_16 (V2), smooth=0.1, img_size 400 -> 224
 14. (Acc: 0.915525) Vit-B_16 (V2), smooth=0.15, img_size 400 -> 224
 15. (Acc: 0.920091) Vit-B_16 (V2), smooth=0.2, img_size 400 -> 224
+16. (Acc: 0.938356) Vit-B_16, smooth=0.07, img_size 500 -> 350 
+17. (Acc: 0.929224) Vit-B_16, smooth=0.1, img_size 500 -> 350 
+> CUDA_VISIBLE_DEVICES=0 python3 -m torch.distributed.launch --nproc_per_node=1 train.py  --split overlap --num_steps 10000 --fp16 --name sample_smooth0.1_img350 --smoothing_value 0.1 --model_type ViT-B_16 --pretrained_dir pretrained_models/ViT-B_16.npz --output_dir output --img_size 350 --train_batch_size 8
 
-
-
-16. cct_14_7x2_384
+16. (Acc: 0.48858 ) cct_14_7x2_384
+16. (Acc: 0.7169  ) cct_14_7x2_384_sine
+16. (Acc:   ) cct_14_7x2_384_sine, img_size 500 -> 384 
 
 
 ## Dependencies:
