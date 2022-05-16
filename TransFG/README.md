@@ -34,7 +34,7 @@
 
 16. (Acc: 0.48858 ) cct_14_7x2_384
 16. (Acc: 0.7169  ) cct_14_7x2_384_sine
-16. (Acc:   ) cct_14_7x2_384_sine, img_size 500 -> 384 
+16. (Acc: 0.7374  ) cct_14_7x2_384_sine, img_size 500 -> 384 
 
 
 ## Dependencies:
