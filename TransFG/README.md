@@ -91,6 +91,12 @@ python my_inference.py
 > Try to be same as angelowen's format.  
 > Execute `python my_inference.py -h` for more details
 
+#### Best weight
+https://drive.google.com/file/d/1gUQJjJExxr3kowS9MpoyNpnQQSVT-xQe/view?usp=sharing  
+
+* Train 的方法  
+CUDA_VISIBLE_DEVICES=0 python3 -m torch.distributed.launch --nproc_per_node=1 train.py  --split overlap --num_steps 10000 --fp16 --name sample_smooth0.07 --smoothing_value 0.07
+
 
 ## Reference
 [*TransFG: A Transformer Architecture for Fine-grained Recognition (AAAI2022)*](https://arxiv.org/abs/2103.07976)  
