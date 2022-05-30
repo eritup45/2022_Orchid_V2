@@ -183,7 +183,8 @@ def valid(args, model, writer, test_loader, global_step):
     # print("  Batch size = %d", args.eval_batch_size)
 
     model.eval()
-    all_preds, all_label = [], []
+    all_preds = np.array([])
+    all_filenames = []
     epoch_iterator = tqdm(test_loader,
                           desc="Validating... (loss=X.X)",
                           bar_format="{l_bar}{r_bar}",
@@ -204,7 +205,11 @@ def valid(args, model, writer, test_loader, global_step):
             eval_losses.update(eval_loss.item())
 
             preds = torch.argmax(logits, dim=-1)    # Can do ensemble here!
-        print(f'filenames: {filenames}, preds: {preds}, len(filenames): {len(filenames)}, {len(filenames)==len(preds)}')
+        print(f'filenames: {filenames}, preds: {preds}, len(filenames): {len(filenames)}')
+        all_preds = np.append(all_preds, preds.detach().cpu().numpy())
+        for f in filenames:
+            all_filenames.append(f)
+
 
         # if len(all_preds) == 0:
         #     all_preds.append(preds.detach().cpu().numpy())
@@ -232,12 +237,19 @@ def valid(args, model, writer, test_loader, global_step):
     # print("Valid Accuracy: %2.5f" % val_accuracy)
         
     # return val_accuracy
-    return None
+    return all_filenames, all_preds.tolist()
+
+def write_csv(all_filenames, all_preds):
+    data_dict = {"filename": pd.Series(all_filenames),
+                 "category": pd.Series(all_preds)}
+    df = pd.DataFrame(data_dict)
+    df.to_csv(("./Final_submission.csv"), index=False)
+
 
 def test(args, model, test_loader):
     with torch.no_grad():
-        accuracy = valid(args, model, 0, test_loader, global_step=0)
-
+        all_filenames, all_preds = valid(args, model, 0, test_loader, global_step=0)
+        write_csv(all_filenames, all_preds)
 
 
 # TODO: 街上彥伯的Inference 方式
@@ -267,6 +279,7 @@ if __name__ == "__main__":
     else:    
         test_loader, model = set_environment(args)
         test(args, model, test_loader)
+        
 
 """
 def evaluate(model, device, test_loader):
