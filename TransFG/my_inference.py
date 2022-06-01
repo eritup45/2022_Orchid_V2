@@ -18,6 +18,8 @@ import argparse
 import os
 from apex import amp
 import torch.distributed as dist
+import ttach as tta
+import copy
 
 
 class AverageMeter(object):
@@ -165,13 +167,6 @@ def set_environment(args):
         model.load_state_dict(checkpoint['model'])
         model.to(args.device)
 
-        # TODO: 看這再衝三小? No need?
-        # if args.fp16:
-        #     model, optimizer = amp.initialize(models=model,
-        #                                   optimizers=optimizer,
-        #                                   opt_level=args.fp16_opt_level)
-        # amp._amp_state.loss_scalers[0]._loss_scale = 2**20
-
     return test_loader, model
 
 def valid(args, model, writer, test_loader, global_step):
@@ -199,12 +194,29 @@ def valid(args, model, writer, test_loader, global_step):
         y = y.to(args.device)
         with torch.no_grad():
             logits = model(x)
-
             eval_loss = loss_fct(logits, y)
             eval_loss = eval_loss.mean()
             eval_losses.update(eval_loss.item())
-
             preds = torch.argmax(logits, dim=-1)    # Can do ensemble here!
+
+            if args.tta:    # Test time augmentation
+                batch_logits = copy.deepcopy(logits)
+                TTA_transforms = tta.Compose(
+                [
+                    tta.HorizontalFlip(),
+                    # tta.Rotate90(angles=[0, 90]),
+                    # tta.Add(values = [-1, 0, 1, 2]),
+                    # tta.Multiply(factors=[0.9, 1, 1.1]),        
+                ])   
+                for transformer in TTA_transforms:
+                    augmented_image = transformer.augment_image(x)
+                    logits = model(augmented_image)
+                    eval_loss = loss_fct(logits, y)
+                    eval_loss = eval_loss.mean()
+                    eval_losses.update(eval_loss.item())
+                    print(f'logits: {logits},\n batch_logits: {batch_logits}')
+                    batch_logits += logits
+                preds = torch.argmax(batch_logits, dim=-1)
         print(f'filenames: {filenames}, preds: {preds}, len(filenames): {len(filenames)}')
         all_preds = np.append(all_preds, preds.detach().cpu().numpy())
         for f in filenames:
